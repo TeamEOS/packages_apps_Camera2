@@ -228,6 +228,9 @@ public class CameraUtil {
     // HTC camcorder mode
     private static boolean sHTCCamMode;
 
+    // Oppo camera mode
+    private static boolean sOppoCamMode;
+
     private CameraUtil() {
     }
 
@@ -239,6 +242,7 @@ public class CameraUtil {
         sPixelDensity = metrics.density;
         sImageFileNamer = new ImageFileNamer(
                 context.getString(R.string.image_file_name_format));
+        sOppoCamMode = context.getResources().getBoolean(R.bool.needsOppoCamMode);
         sEnableZSL = context.getResources().getBoolean(R.bool.enableZSL);
         sNoFocusModeChangeForTouch = context.getResources().getBoolean(
                 R.bool.useContinuosFocusForTouch);
@@ -276,6 +280,10 @@ public class CameraUtil {
 
     public static boolean isHDRWithZSLEnabled() {
         return sEnableHDRWithZSL;
+    }
+
+    public static boolean useOppoCamMode() {
+        return sOppoCamMode;
     }
 
     public static boolean isHistogramEnabled() {

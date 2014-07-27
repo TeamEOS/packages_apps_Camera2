@@ -964,6 +964,9 @@ public class CameraSettings {
         if (CameraUtil.useHTCCamMode()) {
             params.set("cam-mode", on ? "1" : "0");
         }
+        if (CameraUtil.useOppoCamMode()) {
+            params.set("oppo-app", "1");
+        }
     }
 
     public static List<String> getSupportedSlowShutter(Parameters params) {

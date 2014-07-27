@@ -47,4 +47,6 @@
     <bool name="enableHDRWithZSL">false</bool>
     <!-- Enable histogram support -->
     <bool name="enableHistogram">false</bool>
+    <!-- Set oppo-app parameter to 1 to change Oppo HAL behavior -->
+    <bool name="needsOppoCamMode">false</bool>
 </resources>
