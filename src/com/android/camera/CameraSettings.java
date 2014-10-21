@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 The Android Open Source Project
- * Copyright (C) 2013 The CyanogenMod Project
+ * Copyright (C) 2013-2014 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,6 +83,7 @@ public class CameraSettings {
     public static final String KEY_SUPERZOOM = "pref_camera_superzoom";
 
     public static final String KEY_POWER_SHUTTER = "pref_power_shutter";
+    public static final String KEY_MAX_BRIGHTNESS = "pref_max_brightness";
     public static final String KEY_VIDEO_ENCODER = "pref_camera_videoencoder_key";
     public static final String KEY_AUDIO_ENCODER = "pref_camera_audioencoder_key";
     public static final String KEY_VIDEO_DURATION = "pref_camera_video_duration_key";
@@ -283,7 +284,7 @@ public class CameraSettings {
     private List<String> getSupportedPictureFormatLists() {
         String str = mParameters.get(KEY_QC_PICTURE_FORMAT);
         if (str == null) {
-            str = "jpeg,raw"; // if not set, fall back to default behavior
+            return null;
         }
         return split(str);
     }
@@ -441,6 +442,7 @@ public class CameraSettings {
         ListPreference asd = group.findPreference(KEY_ASD);
         ListPreference storage = group.findPreference(KEY_STORAGE);
         ListPreference superZoom = group.findPreference(KEY_SUPERZOOM);
+        ListPreference videoHdr = group.findPreference(KEY_VIDEO_HDR);
 
         // Since the screen could be loaded from different resources, we need
         // to check if the preference is available here
@@ -496,6 +498,9 @@ public class CameraSettings {
         if (cameraHdrPlus != null && (!ApiHelper.HAS_CAMERA_HDR_PLUS ||
                 !GcamHelper.hasGcamCapture() || isFrontCamera)) {
             removePreference(group, cameraHdrPlus.getKey());
+        }
+        if (videoHdr != null) {
+            filterUnsupportedOptions(group, videoHdr, mParameters.getSupportedVideoHDRModes());
         }
         if (powerShutter != null && CameraUtil.hasCameraKey()) {
             removePreference(group, powerShutter.getKey());
@@ -996,11 +1001,6 @@ public class CameraSettings {
     public static boolean isSlowShutterEnabled(Parameters params) {
         return (getSupportedSlowShutter(params) != null) &&
                 !"0".equals(params.get("exposure-time"));
-    }
-
-    public static boolean useZSLBurst(Parameters params) {
-        return CameraUtil.isZSLEnabled() &&
-                params.get("num-snaps-per-shutter") != null;
     }
 
     public static void setSuperZoom(Parameters params, boolean on) {
